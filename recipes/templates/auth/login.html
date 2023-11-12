@@ -1,3 +1,17 @@
 {% extends "layout.html" %}
 
+{% block title %} Login {% endblock %}
 
+{% block header %}
+    <h1>If you have an account please log in.</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post" class="form">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" required>
+        <label for="confirmation">Password</label>
+        <input type="password" name="password" id="password" minlength="6" maxlength="20" required>
+        <button type="submit" class="submit_button">Register</button>
+    </form>
+{% endblock %}
