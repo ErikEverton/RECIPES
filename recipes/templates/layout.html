@@ -9,6 +9,14 @@
 <body>
     <nav class="container">
         <h1>Recipes</h1>
+        <ul>
+            {% if g.user %}
+            <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
+            {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+            {% endif %}
+        </ul>
     </nav>
     <section class="content container">
         <header>
