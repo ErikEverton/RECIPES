@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, render_template, g
 
 bp = Blueprint('recipes', __name__)
 
@@ -8,4 +8,4 @@ from recipes.db import get_db
 
 @bp.route('/')
 def index():
-    return "index"
+    return render_template("recipes/index.html")

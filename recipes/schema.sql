@@ -11,7 +11,7 @@ CREATE TABLE recipe(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     chef_id INTEGER NOT NULL, 
     title  TEXT UNIQUE NOT NULL,
-    Ingredients TEXT NOT NULL,
+    ingredients TEXT NOT NULL,
     instructions TEXT NOT NULL,
     preparation_time INTEGER NOT NULL,
     difficulty TEXT NOT NULL,

@@ -1,5 +1,7 @@
 import functools
+
 from flask import Blueprint, g, request, render_template, url_for, flash, get_flashed_messages, redirect, session
+
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from recipes.db import get_db
@@ -12,7 +14,9 @@ def login_requied(view):
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for("auth.login"))
+        
         return view(**kwargs)
+    
     return wrapped_view
 
 
@@ -23,10 +27,10 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute("SELECT * FROM users WHERE user id = ?", (user_id)).fetchone()
+        g.user = get_db().execute("SELECT * FROM users WHERE id = ?", (user_id,),).fetchone()
 
 
-@bp.route("/register/", methods=["GET", "POST"])
+@bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
@@ -42,11 +46,11 @@ def register():
         if not confirmation:
             error = 'Confirmation is required.'
         if confirmation != password:
-            error = 'Confirmation and password must be equal'
+            error = 'Confirmation and password must be equal.'
 
         if error is None:
             try:
-                db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, generate_password_hash(password)))
+                db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, generate_password_hash(password)),)
                 db.commit()
             except db.IntegrityError:
                 error = f"User {username} is already registered."
@@ -57,19 +61,21 @@ def register():
     return render_template("auth/register.html")
         
 
-@bp.route("/login/", methods=["GET", "POST"])
+@bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         db = get_db()
         error = None
-        user = db.execute("SELECT id, username, hash FROM users WHERE username = ?", (username)).fetchone()
+        user = db.execute(
+            "SELECT * FROM users WHERE username = ?", (username,)
+        ).fetchone()
         
         if user is None:
-            error = "Incorrect username"
-        elif not check_password_hash(user[hash], password):
-            error = "Incorrect password"
+            error = "Incorrect username."
+        if not check_password_hash(user['hash'], password):
+            error = "Incorrect password."
 
         if error is None:
             session.clear()
