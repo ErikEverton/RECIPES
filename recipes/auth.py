@@ -30,7 +30,7 @@ def load_logged_in_user():
         g.user = get_db().execute("SELECT * FROM users WHERE id = ?", (user_id,),).fetchone()
 
 
-@bp.route("/register", methods=["GET", "POST"])
+@bp.route("/register/", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
@@ -41,11 +41,11 @@ def register():
 
         if not username:
             error = 'Username is required.'
-        if not password:
+        elif not password:
             error = 'Password is required.'
-        if not confirmation:
+        elif not confirmation:
             error = 'Confirmation is required.'
-        if confirmation != password:
+        elif confirmation != password:
             error = 'Confirmation and password must be equal.'
 
         if error is None:
@@ -61,7 +61,7 @@ def register():
     return render_template("auth/register.html")
         
 
-@bp.route("/login", methods=["GET", "POST"])
+@bp.route("/login/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"]
@@ -69,12 +69,12 @@ def login():
         db = get_db()
         error = None
         user = db.execute(
-            "SELECT * FROM users WHERE username = ?", (username,)
+            "SELECT * FROM users WHERE username = ?", (username,),
         ).fetchone()
         
         if user is None:
             error = "Incorrect username."
-        if not check_password_hash(user['hash'], password):
+        elif not check_password_hash(user['hash'], password):
             error = "Incorrect password."
 
         if error is None:
@@ -87,7 +87,7 @@ def login():
     return render_template("auth/login.html")
 
 
-@bp.route("logout")
+@bp.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for('index'))

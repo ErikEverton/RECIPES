@@ -4,11 +4,11 @@ from recipes.db import get_db
 
 
 def test_register(client, app):
-    assert client.get('/auth/register').status_code == 200
+    assert client.get('/auth/register/').status_code == 200
     response = client.post(
-        '/auth/register', data={'username': 'a', 'password': 'a', 'confirmation': 'a'}
+        '/auth/register/', data={'username': 'a', 'password': 'a', 'confirmation': 'a'}
     )
-    assert response.headers["Location"] == "/auth/login"
+    assert response.headers["Location"] == "/auth/login/"
 
     with app.app_context():
         assert get_db().execute(
@@ -25,14 +25,14 @@ def test_register(client, app):
 ))
 def test_register_validate_input(client, username, password, confirmation, message):
     response = client.post(
-        '/auth/register',
+        '/auth/register/',
         data={'username': username, 'password': password, 'confirmation': confirmation}
     )
     assert message in response.data
 
 
 def test_login(client, auth):
-    assert client.get('/auth/login').status_code == 200
+    assert client.get('/auth/login/').status_code == 200
     response = auth.login()
     assert response.headers["Location"] == "/"
 
