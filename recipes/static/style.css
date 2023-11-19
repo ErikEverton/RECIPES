@@ -58,7 +58,14 @@ header h1 {
 .content {
     text-align: center;
     background-color: #F0F0F0;
-    height: calc(100vh - 60px);
+    min-height: calc(100vh - 60px);
+}
+
+main {
+    display: flex;
+    gap: 20px;
+    width: 1004px;
+    margin: 0 20px;
 }
 
 .form {
@@ -79,8 +86,19 @@ header h1 {
     margin-bottom: 10px;
 }
 
+.form textarea {
+    border: 1px solid #2ecc71;
+    font-size: 20px;
+    border-radius: 15px;
+    width: 400px;
+    resize: none;
+    padding: 10px;
+    outline: none;
+}
+
 .submit_button {
     background-color: #2ecc71;
+    color: #fff;
     height: 30px;
     width: 100px;
     border-radius: 15px;
@@ -90,4 +108,37 @@ header h1 {
 
 .submit_button:hover {
     background-color: #29b262;
+}
+
+.card-button {
+    align-self: center;
+}
+
+.card-recipe {
+    text-align: left;
+    padding: 20px;
+    width: 250px;
+    height: 300px;
+    background-color: #fff;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-recipe p {
+    background-color: #F0F0F0;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+.card-recipe a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.emphasis {
+    font-weight: bold;
 }

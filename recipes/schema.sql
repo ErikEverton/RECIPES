@@ -15,6 +15,6 @@ CREATE TABLE recipe(
     instructions TEXT NOT NULL,
     preparation_time INTEGER NOT NULL,
     difficulty TEXT NOT NULL,
-    Category TEXT NOT NULL,
+    category TEXT NOT NULL,
     FOREIGN KEY (chef_id) REFERENCES user (id)
 );

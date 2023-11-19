@@ -7,5 +7,24 @@
 {% endblock %}
 
 {% block content %}
-    <p>Index</p>
+    <main>
+        {% for recipe in recipes %}
+            <div class="card-recipe">
+                <p><span class="emphasis">Title:</span> {{recipe['title']}}</p>
+                <p><span class="emphasis">Chef:</span> {{recipe['username']}}</p>
+                <p><span class="emphasis">Igredients:</span> <span class="ingredients">{{recipe['ingredients']}}</span></p>
+                <a class="submit_button card-button" href="{{ url_for('recipes.recipe') }}">See recipe</a>
+            </div>
+        {% endfor %}
+        <script>
+            let elements = document.querySelectorAll(".ingredients");
+            let limit = 50;
+            elements.forEach(e => {
+                if (e.innerHTML.length > limit) {
+                    e.innerHTML = e.innerHTML.substring(0, limit) + '...';
+                }
+            })
+        </script>
+    </main>
 {% endblock %}
+

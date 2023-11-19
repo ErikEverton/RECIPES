@@ -11,6 +11,7 @@
         <h1>Recipes</h1>
         <ul>
             {% if g.user %}
+            <li><a href="{{ url_for('recipes.create') }}">Create Recipe</a></li>
             <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
             {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
