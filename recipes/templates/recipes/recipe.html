@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block title %} Recipe {% endblock %}
+
+{% block header %} <h1>{{data['username']}}'s recipe</h1>{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="recipe-box">
+            <p><span class="emphasis">Chef: </span>{{data['username']}}</p>
+            <p><span class="emphasis">Title: </span>{{data['title']}}</p>
+            <p><span class="emphasis">Ingredients: </span> <br> <span class="ingredients">{{data['ingredients']}}</span></p>
+            <p><span class="emphasis">Instructions: </span> <br> <span class="recipe">{{data['instructions']}}</span></p>
+            <p><span class="emphasis">Preparation_time: </span>{{data['preparation_time']}}</p>
+            <p><span class="emphasis">Difficulty: </span>{{data['difficulty']}}</p>
+            <p><span class="emphasis">Category: </span>{{data['category']}}</p>
+        </div>
+    </main>
+{% endblock %}

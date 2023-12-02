@@ -13,7 +13,10 @@
                 <p><span class="emphasis">Title:</span> {{recipe['title']}}</p>
                 <p><span class="emphasis">Chef:</span> {{recipe['username']}}</p>
                 <p><span class="emphasis">Igredients:</span> <span class="ingredients">{{recipe['ingredients']}}</span></p>
-                <a class="submit_button card-button" href="{{ url_for('recipes.recipe') }}">See recipe</a>
+                {% if g.user['id'] == recipe['chef_id']%}
+                    <a class="submit_button card-button" href="{{ url_for('recipes.update', recipe_id=recipe['id']) }}">Update</a>
+                {% endif %}
+                <a class="submit_button card-button" href="{{ url_for('recipes.recipe', recipe_id=recipe['id']) }}">See recipe</a>
             </div>
         {% endfor %}
         <script>
