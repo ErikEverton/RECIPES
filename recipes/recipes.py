@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, g, request, redirect, url_for, fla
 
 bp = Blueprint('recipes', __name__)
 
-from recipes.auth import login_requied
+from recipes.auth import login_required
 
 from recipes.db import get_db
 
@@ -17,7 +17,7 @@ def index():
 
 
 @bp.route('/create/', methods=['GET', 'POST'])
-@login_requied
+@login_required
 def create():
     if request.method == 'POST':
         title = request.form['title']
@@ -81,8 +81,8 @@ def get_recipe(id, check_autor=True):
     return post
 
 
-@bp.route('/update/<int:recipe_id>', methods=['GET', 'POST'])
-@login_requied
+@bp.route('/update/<int:recipe_id>', methods=('GET', 'POST'))
+@login_required
 def update(recipe_id):
     recipe = get_recipe(recipe_id)
     if request.method == 'POST':
@@ -121,9 +121,10 @@ def update(recipe_id):
     return render_template('recipes/update.html', recipe=recipe)
 
 
-@bp.route('/delete/<int:recipe_id>', methods=('post',))
-@login_requied
+@bp.route('/delete/<int:recipe_id>', methods=('POST',))
+@login_required
 def delete(recipe_id):
+    get_recipe(recipe_id)
     db = get_db()
     db.execute('DELETE FROM recipe WHERE id = ?', (recipe_id, ))
     db.commit()

@@ -9,7 +9,7 @@ from recipes.db import get_db
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
-def login_requied(view):
+def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
