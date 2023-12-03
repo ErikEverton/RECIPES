@@ -7,5 +7,27 @@
 {% endblock %}
 
 {% block content %}
-    
+    <form method="post" class="form">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" value="{{ recipe['title'] }}" required>
+        <label for="ingredients">ingredients</label>
+        <textarea type="text" name="ingredients" id="ingredients" cols="30" rows="5" required>
+            {{ recipe['ingredients'] }}
+        </textarea>
+        <label for="instructions">instructions</label>
+        <textarea type="text" name="instructions" id="instructions"  cols="30" rows="5" required>
+            {{ recipe['instructions'] }}
+        </textarea>
+        <label for="preparation_time">preparation time (in minutes):</label>
+        <input type="number" name="preparation_time" value="{{recipe['preparation_time']}}" id="preparation_time" min="1">
+        <label for="difficulty">difficulty:</label>
+        <input type="text" name="difficulty" value="{{ recipe['difficulty'] }}" id="difficulty">
+        <label for="category">category:</label>
+        <input type="text" name="category" value="{{ recipe['category'] }}" id="category">
+        <button type="submit" class="submit_button">Submit</button>
+    </form>
+    <br>
+    <form action="{{ url_for('recipes.delete', recipe_id=recipe['id']) }}" method="post">
+        <button type="submit" class="delete_button" onclick="return confirm('Are you sure?')">DELETE</button>
+    </form>
 {% endblock %}

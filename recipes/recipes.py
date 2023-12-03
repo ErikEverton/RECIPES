@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, g, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, g, request, redirect, url_for, flash, abort
 
 bp = Blueprint('recipes', __name__)
 
@@ -61,15 +61,30 @@ def recipe(recipe_id):
     db = get_db()
     data = db.execute(
         "SELECT * FROM recipe r"
-        "   JOIN users u ON u.id = r.id"
+        "   JOIN users u ON u.id = r.chef_id"
         "   WHERE r.id = ? ", (recipe_id,)
     ).fetchone()
     return render_template('recipes/recipe.html', data=data)
 
 
+def get_recipe(id, check_autor=True):
+    post = get_db().execute(
+        'SELECT * FROM recipe WHERE id = ?', (id,)
+    ).fetchone()
+
+    if post is None:
+        abort(404, f"Post id {id} doesn't exist.")
+    
+    if check_autor and post['chef_id'] != g.user['id']:
+        abort(403)
+    
+    return post
+
+
 @bp.route('/update/<int:recipe_id>', methods=['GET', 'POST'])
 @login_requied
 def update(recipe_id):
+    recipe = get_recipe(recipe_id)
     if request.method == 'POST':
         title = request.form['title']
         ingredients = request.form['ingredients']
@@ -82,15 +97,34 @@ def update(recipe_id):
         if not title:
             error = 'Title is required.'
         elif not ingredients:
-            error = 'ingredients is required.'
+            error = 'Ingredients is required.'
         elif not instructions:
-            error = 'instructions is required.'
+            error = 'Instructions is required.'
         elif not preparation_time:
-            error = 'preparation_time is requied.'
+            error = 'Preparation_time is requied.'
         elif not difficulty:
-            error = 'difficulty is requied.'
+            error = 'Difficulty is requied.'
         elif not category:
-            error
+            error = 'Category is required.'
+
+        if error is None:
+            db = get_db()
+            db.execute(
+                'UPDATE recipe SET title = ?, ingredients = ?, instructions=?, preparation_time=?, difficulty=?, category=?'
+                'WHERE id = ?',
+                (title, ingredients, instructions, preparation_time, difficulty, category, recipe_id)
+            )
+            db.commit()
+            return redirect(url_for('index'))
 
 
-    return render_template('recipes/update.html')
+    return render_template('recipes/update.html', recipe=recipe)
+
+
+@bp.route('/delete/<int:recipe_id>', methods=('post',))
+@login_requied
+def delete(recipe_id):
+    db = get_db()
+    db.execute('DELETE FROM recipe WHERE id = ?', (recipe_id, ))
+    db.commit()
+    return redirect(url_for('index'))
