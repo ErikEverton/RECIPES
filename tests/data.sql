@@ -6,3 +6,8 @@ VALUES
 INSERT INTO recipe (title, instructions, chef_id, ingredients, preparation_time, difficulty, Category)
 VALUES
   ('test title', 'test' || x'0a' || 'body', 1, 'test igredients', 1, 'test difficulty', 'test category');
+
+
+INSERT INTO comments (id, recipe_id, user_id, body)
+VALUES
+  (1, 1, 1, 'Test comment')

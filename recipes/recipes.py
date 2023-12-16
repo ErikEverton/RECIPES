@@ -56,15 +56,40 @@ def create():
     return render_template('recipes/create.html')
 
 
-@bp.route('/recipe/<int:recipe_id>')
+@bp.route('/recipe/<int:recipe_id>', methods=['GET', 'POST'])
 def recipe(recipe_id):
     db = get_db()
-    data = db.execute(
+    if request.method == 'POST':
+        if not g.user:
+            return redirect(url_for('auth.login'))
+        body = request.form['body']
+        error = None
+
+        if not body:
+            error = 'comment is required'
+        
+        if error is None:
+            user_id = g.user['id']
+            db.execute(
+                'INSERT INTO comments (recipe_id, user_id, body)'
+                'VALUES (?, ?, ?)', (recipe_id, user_id, body),
+            )
+            db.commit()
+        
+        return redirect(url_for('recipes.recipe', recipe_id=recipe_id))
+            
+    
+    recipe = db.execute(
         "SELECT * FROM recipe r"
         "   JOIN users u ON u.id = r.chef_id"
         "   WHERE r.id = ? ", (recipe_id,)
     ).fetchone()
-    return render_template('recipes/recipe.html', data=data)
+    comments = db.execute(
+        "SELECT * FROM comments c"
+        "   JOIN users u ON u.id = user_id"
+        "   WHERE recipe_id = ? ", (recipe_id,)
+    )
+    return render_template('recipes/recipe.html', data=recipe, comments=comments)
 
 
 def get_recipe(id, check_autor=True):
@@ -79,6 +104,14 @@ def get_recipe(id, check_autor=True):
         abort(403)
     
     return post
+
+
+def get_comment(id):
+    comment = get_db().execute(
+        'SELECT * FROM comments WHERE id = ?', (id, )
+    ).fetchone()
+
+    return comment
 
 
 @bp.route('/update/<int:recipe_id>', methods=('GET', 'POST'))
@@ -121,11 +154,21 @@ def update(recipe_id):
     return render_template('recipes/update.html', recipe=recipe)
 
 
-@bp.route('/delete/<int:recipe_id>', methods=('POST',))
+@bp.route('/delete_recipe/<int:recipe_id>', methods=('POST',))
 @login_required
-def delete(recipe_id):
+def delete_recipe(recipe_id):
     get_recipe(recipe_id)
     db = get_db()
     db.execute('DELETE FROM recipe WHERE id = ?', (recipe_id, ))
     db.commit()
     return redirect(url_for('index'))
+
+
+@bp.route('/delete_comment/<int:comment_id>', methods=('POST',))
+@login_required
+def delete_comment(comment_id):
+    comment = get_comment(comment_id)
+    db = get_db()
+    db.execute('DELETE FROM comments WHERE id = ?', (comment_id, ))
+    db.commit()
+    return redirect(url_for('recipes.recipe', recipe_id=comment['recipe_id']))

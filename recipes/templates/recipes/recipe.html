@@ -14,6 +14,29 @@
             <p><span class="emphasis">Preparation_time: </span>{{data['preparation_time']}}</p>
             <p><span class="emphasis">Difficulty: </span>{{data['difficulty']}}</p>
             <p><span class="emphasis">Category: </span>{{data['category']}}</p>
+            <br>
+            <div class="comments">
+                <form method="post" class="form">
+                    <label for="body">Create a comment:</label>
+                    <textarea type="text" name="body" id="body" cols="30" rows="5"  required></textarea>
+                    <button type="submit" class="submit_button comment_button">Send</button>
+                </form>
+                <div class="people-comments">
+                    {% if comments %}
+                        {% for comment in comments %}
+                            <div class="comment">
+                                <p>User: <span class="user">{{ comment['username'] }}</span></p>
+                                <p>{{ comment['body'] }}</p>
+                                {% if g.user['id'] == comment['user_id'] %}
+                                    <form action="{{ url_for('recipes.delete_comment', comment_id=comment['id']) }}" method="post">
+                                        <button class="delete_button" type="submit">DELETE</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </main>
 {% endblock %}

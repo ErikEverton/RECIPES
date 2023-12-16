@@ -16,7 +16,8 @@ def test_index(client, auth):
 @pytest.mark.parametrize('path', (
     '/create/',
     '/update/1',
-    '/delete/1',
+    '/delete_recipe/1',
+    '/delete_comment/1',
 ))
 def test_login_required(client, path):
     response = client.post(path)
@@ -31,8 +32,8 @@ def test_author_required(app, client, auth):
 
     auth.login()
     assert client.post('/update/1').status_code == 403
-    assert client.post('/delete/1').status_code == 403
-    assert b"href=/1/update" not in client.get('/').data
+    assert client.post('/delete_recipe/1').status_code == 403
+    assert b"href=/update/1" not in client.get('/').data
 
 
 @pytest.mark.parametrize('path', (
@@ -78,11 +79,20 @@ def test_create_update_validate(client, auth, path):
 
 def test_delete(client, auth, app):
     auth.login()
-    response = client.post('delete/1')
+    response = client.post('delete_recipe/1')
     assert response.headers['Location'] == '/'
     
     with app.app_context():
         db = get_db()
-        post = db.execute('SELECT * FROM recipe WHERE id = 1').fetchone()
-        assert post is None
+        recipe = db.execute('SELECT * FROM recipe WHERE id = 1').fetchone()
+        assert recipe is None
+
+
+def test_delete_comment(client, auth, app):
+    auth.login()
+    
+    with app.app_context():
+        db = get_db()
+        comment = db.execute('SELECT * FROM comments WHERE id = 1').fetchone()
+        assert comment is None
 

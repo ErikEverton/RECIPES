@@ -70,7 +70,7 @@ header h1 {
     min-height: calc(100vh - 60px);
 }
 
-main {
+.index-content {
     display: flex;
     gap: 20px;
     width: calc(100% - 20px);
@@ -114,6 +114,10 @@ main {
     border-radius: 15px;
     border: none;
     cursor: pointer;
+}
+
+.comment_button {
+    margin-top: 20px;
 }
 
 .submit_button:hover {
@@ -183,8 +187,53 @@ main {
     white-space: pre-line;
 }
 
-@media (max-width: 1024) {
+.comments {
+    width: 80%;
+    margin: auto;
+    background-color: #F0F0F0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.comment {
+    background-color: #fff;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.user {
+    background-color: #2ecc71;
+    padding: 3px 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+@media (max-width: 1024px) {
     .container {
         width: 100%;
     }
+
+    .recipe-box {
+        width: 80%;
+    }
 }
+
+@media (max-width: 760px) {
+    .recipe-box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 560px) {
+    .comments {
+        width: 100%;
+    }
+    
+    .form textarea {
+        width: 90%;
+    }
+
+}
+
+
