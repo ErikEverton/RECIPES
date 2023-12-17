@@ -45,6 +45,7 @@ When you install the python, pip will be instaled with it.
 #### Instalation guide
 
 -Steps to run the project
+
 Activate the virtual enviroment:
 ```bash
 . .venv/bin/activate
