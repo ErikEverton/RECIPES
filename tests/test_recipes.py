@@ -90,6 +90,7 @@ def test_delete(client, auth, app):
 
 def test_delete_comment(client, auth, app):
     auth.login()
+    response = client.post('delete_comment/1')
     
     with app.app_context():
         db = get_db()
