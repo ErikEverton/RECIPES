@@ -30,7 +30,7 @@ All the html files are here.
 
 ### /recipes/schema.sql
 
-Here we create all the we're going to use.
+Here we create all the tables we're going to use.
 
 ### /tests
 
